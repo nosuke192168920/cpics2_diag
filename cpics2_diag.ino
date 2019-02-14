@@ -8,7 +8,7 @@
  *
  */
 
-#define VERSION "1.0.0"
+#define VERSION "1.0"
 
 #include "sha1.h"
 #include "cps2_key_sha1.h"
@@ -51,9 +51,9 @@ const uint32_t *key_sha1_list[] = {
 #define CLOCK       11
 #define RESET_      12
 
-// https://arduinoinfo.mywikis.net/wiki/LCD-Pushbuttons
+// use reference code at https://arduinoinfo.mywikis.net/wiki/LCD-Pushbuttons
 
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);  //These are the pins used on this shield
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 #define btnRIGHT  0
 #define btnUP     1
@@ -69,13 +69,16 @@ int adc_key_prev  = 0;
 int read_LCD_buttons()
 {
     adc_key_in = analogRead(0);
+
+    // uncomment here to check button value
+    //linePrint(0, "");
+    //linePrintNum(0, adc_key_in);
     delay(5);
     int k = (analogRead(0) - adc_key_in);
-    //if (abs(k) > 5) return btnNONE;
-    if (abs(k) > 5) return lcd_key;
+    if (abs(k) > 50) return lcd_key;
 
     if (adc_key_in > 1000) return btnNONE;
-    if (adc_key_in < 50)   return btnRIGHT;
+    if (adc_key_in < 100)  return btnRIGHT;
     if (adc_key_in < 195)  return btnUP;
     if (adc_key_in < 380)  return btnDOWN;
     if (adc_key_in < 555)  return btnLEFT;
@@ -262,8 +265,6 @@ void verifyMode()
         linePrint(0, buffer);
     } else {
         linePrint(0, "Unknown key...");
-        //sprintf(buffer, "%02x%02x%02x%02x%02x%02x%02x%02x", rawkey[12], rawkey[13], rawkey[14], rawkey[15], rawkey[16], rawkey[17], rawkey[18], rawkey[19]);
-        //linePrint(1, buffer);
     }
 }
 
@@ -271,9 +272,8 @@ void verifyMode()
 void showInitialScreen()
 {
     char buffer[20];
-    linePrint(0, "CPicS2 Verify");
-    sprintf(buffer, "  V%s", VERSION);
-    linePrint(1, buffer);
+    sprintf(buffer, "CPicS2 diag V%s", VERSION);
+    linePrint(0, buffer);
     delay(3000);
 }
 
@@ -338,4 +338,5 @@ void loop()
 
     linePrint(1, buffer);
 
+    delay(10);
 }

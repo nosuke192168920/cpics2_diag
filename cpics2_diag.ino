@@ -1,4 +1,4 @@
-/* -*- Mode:C -*- */
+/* -*- Mode:C++ -*- */
 /* 
  * CPicS2 diag for Arduino Uno
  * Copyright (c) 2019 sasugaanija@gmail.com
@@ -40,54 +40,19 @@ const uint32_t *key_sha1_list[] = {
 #undef __M    
 };
 
-
 #include <LiquidCrystal.h>
 #include <stdio.h>
 
+#include "lcd_button.h"
+
 #define KEYLEN 20
 
-#define DATA        2
-#define WP_         3
-#define CLOCK       11
-#define RESET_      12
-
-// use reference code at https://arduinoinfo.mywikis.net/wiki/LCD-Pushbuttons
+#define DATA   2
+#define WP_    3
+#define CLOCK  11
+#define RESET_ 12
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
-
-#define btnRIGHT  0
-#define btnUP     1
-#define btnDOWN   2
-#define btnLEFT   3
-#define btnSELECT 4
-#define btnNONE   5
-
-int lcd_key       = btnNONE;
-int adc_key_in    = 0;
-int adc_key_prev  = 0;
-
-int read_LCD_buttons()
-{
-    adc_key_in = analogRead(0);
-
-    // uncomment here to check button value
-    //linePrint(0, "");
-    //linePrintNum(0, adc_key_in);
-    delay(5);
-    int k = (analogRead(0) - adc_key_in);
-    if (abs(k) > 50) return lcd_key;
-
-    if (adc_key_in > 1000) return btnNONE;
-    if (adc_key_in < 100)  return btnRIGHT;
-    if (adc_key_in < 195)  return btnUP;
-    if (adc_key_in < 380)  return btnDOWN;
-    if (adc_key_in < 555)  return btnLEFT;
-    if (adc_key_in < 790)  return btnSELECT;
-
-    return btnNONE;
-}
-
-
 
 
 #define LCDW 16
@@ -297,6 +262,8 @@ void setup()
 void loop()
 {
     char buffer[20];
+
+    static int adc_key_prev = 0;
     
     adc_key_prev = lcd_key ;       // Looking for changes
     lcd_key = read_LCD_buttons();  // read the buttons

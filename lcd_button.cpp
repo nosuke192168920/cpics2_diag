@@ -1,4 +1,7 @@
+#include <Arduino.h>
+
 #include "lcd_button.h"
+
 
 // https://arduinoinfo.mywikis.net/wiki/LCD-Pushbuttons
 
@@ -9,9 +12,6 @@ int read_LCD_buttons()
 {
     adc_key_in = analogRead(0);
 
-    // uncomment here to check button value
-    //linePrint(0, "");
-    //linePrintNum(0, adc_key_in);
     delay(5);
     int k = (analogRead(0) - adc_key_in);
     if (abs(k) > 50) return lcd_key;

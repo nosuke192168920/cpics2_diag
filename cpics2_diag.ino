@@ -204,6 +204,7 @@ void verifyMode()
  
     // serach matched key
     linePrint(0, "Search DB...");
+    linePrint(1, "");
     step = 0;
     
     for (int i = 0; i < keynum; i++) {
@@ -259,11 +260,19 @@ void setup()
 
 
 
+
+int adc_key_prev = btnNONE;
+
 void loop()
 {
     char buffer[20];
 
-    static int adc_key_prev = 0;
+    // uncomment this to show button value
+    /*
+    int temp = analogRead(0);
+    linePrint(0, "");
+    linePrintNum(0, temp);
+    */
     
     adc_key_prev = lcd_key ;       // Looking for changes
     lcd_key = read_LCD_buttons();  // read the buttons
